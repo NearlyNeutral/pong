@@ -82,7 +82,58 @@ int random(int l, int h) {
 }
 
 int moveball() {
-	//Add ball bouncing from bounce.c
-	//Note - change indexes
+	//from bounc.c
+	//note - no contact with bat yet
+	if ((ballx < 2) && (bally < 2)) {
+		balldir = 3;
+	} else if ((ballx < 2) && (bally > theight)) {
+		balldir = 9;
+	} else if ((ballx > twidth - 1) && (bally < 2)) {
+		balldir = 1;
+	} else if ((ballx > twidth - 1) && (bally > theight)) {
+		balldir = 7;
+	} else if ((ballx < 2) && ((balldir % 3) == 1)) {
+		balldir += 2;
+	} else if ((ballx > twidth - 1) && ((balldir % 3) == 0)) {
+		balldir -= 2;
+	} else if ((bally < 2) && (balldir > 6)) {
+		balldir -= 6;
+	} else if ((bally > theight) && (balldir < 4)) {
+		balldir += 6;
+	}
+	switch (balldir) {
+		case 1:
+			bally++;
+			ballx--;
+			break;
+		case 2:
+			bally++;
+			break;
+		case 3:
+			bally++;
+			ballx++;
+			break;
+		case 4:
+			ballx--;
+			break;
+		case 5:
+			break;
+		case 6:
+			ballx++;
+			break;
+		case 7:
+			bally--;
+			ballx--;
+			break;
+		case 8:
+			bally--;
+			break;
+		case 9:
+			bally--;
+			ballx++;
+			break;
+		default:
+			break;
+	}
 	return 0;
 }

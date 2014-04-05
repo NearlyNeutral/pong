@@ -2,7 +2,7 @@
 #include <time.h>
 
 #define PADDLE_WIDTH 5
-#define MOVE_RATE 5
+#define MOVE_RATE 2
 #define P_STEP 2
 
 int twidth, theight;
@@ -20,10 +20,10 @@ int main () {
 	srand(time(NULL));
 	initscr();
 	cbreak();
-//	halfdelay(MOVE_RATE);
+	halfdelay(MOVE_RATE);
 	noecho();
 	curs_set(0);
-	twidth = random(10, COLS - 20);
+	twidth = random(PADDLE_WIDTH * 2 + P_STEP, COLS - 20);
 	theight = random(5, ((twidth + 5 > LINES) ? (LINES - 4) : (twidth)));
 	int winx, winy, wwidth, wheight;
 	wwidth = twidth + 2;
@@ -82,7 +82,7 @@ int random(int l, int h) {
 }
 
 int moveball() {
-	//from bounc.c
+	//from bounce.c
 	//note - no contact with bat yet
 	if ((ballx < 2) && (bally < 2)) {
 		balldir = 3;

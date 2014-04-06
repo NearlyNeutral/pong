@@ -23,7 +23,7 @@ int main () {
 	halfdelay(MOVE_RATE);
 	noecho();
 	curs_set(0);
-	twidth = random(PADDLE_WIDTH * 2 + P_STEP, COLS - 20);
+	twidth = random(PADDLE_WIDTH * 2 + P_STEP, COLS - 30);
 	theight = random(5, ((twidth + 5 > LINES) ? (LINES - 4) : (twidth)));
 	int winx, winy, wwidth, wheight;
 	wwidth = twidth + 2;
@@ -35,12 +35,12 @@ int main () {
 	bally = theight;
 	balldir = random(0, 2) * 2 + 7;
 	win = newwin(wheight, wwidth, winy, winx);
-	printw("%d x %d\n", twidth, theight);
-	printw("%d x %d\n", COLS, LINES);
+//	printw("%d x %d\n", twidth, theight);
+//	printw("%d x %d\n", COLS, LINES);
 	refresh();
 	updatewin();
 	char ch;
-	while (((ch = wgetch(win)) != 'x') && (bally < theight + 1)) {
+	while (((ch = wgetch(win)) != 'x')/* && (bally < theight + 1)*/) {
 		switch (ch) {
 			case 'h':
 				paddlex-= P_STEP;
@@ -55,6 +55,9 @@ int main () {
 
 		}
 		moveball();
+		erase();
+		mvprintw(0, 0, "(y, x): (%2d, %2d)", bally, ballx);
+		refresh();
 		updatewin();
 	}
 

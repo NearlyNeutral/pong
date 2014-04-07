@@ -29,7 +29,7 @@ int main () {
 	wwidth = twidth + 2;
 	wheight = theight + 3;
 	winy = (LINES - wheight) / 2;
-	winx = (COLS - wwidth) / 2;
+	winx = (COLS - wwidth) / 2 + 10;
 	paddlex = random(1, twidth + 2 - PADDLE_WIDTH);
 	ballx = random(paddlex, paddlex + PADDLE_WIDTH);
 	bally = theight;
@@ -40,7 +40,7 @@ int main () {
 	refresh();
 	updatewin();
 	char ch;
-	while (((ch = wgetch(win)) != 'x')/* && (bally < theight + 1)*/) {
+	while (((ch = wgetch(win)) != 'x') && (bally < theight + 1)) {
 		switch (ch) {
 			case 'h':
 				paddlex-= P_STEP;
@@ -56,13 +56,15 @@ int main () {
 		}
 		moveball();
 		erase();
-		mvprintw(0, 0, "(y, x): (%2d, %2d)", bally, ballx);
+		mvprintw(0, 0, "(y, x): \t(%2d, %2d)", bally, ballx);
+		mvprintw(1, 0, "Paddle: \t%2d to %d", paddlex, paddlex + PADDLE_WIDTH - 1); 
+		mvprintw(2, 0, "Ball direction:\t %d", balldir);
 		refresh();
 		updatewin();
 	}
 
-
-
+//	halfdelay(0);
+//	while (wgetch(win) != 'x') ;
 	endwin();
 	return 0;
 }
@@ -87,14 +89,28 @@ int random(int l, int h) {
 int moveball() {
 	//from bounce.c
 	//note - no contact with bat yet
-	if ((ballx < 2) && (bally < 2)) {
+	if ((balldir < 4) && (bally == theight)) {
+		switch (balldir) {
+			case 1:
+				if (ballx == 1) {
+					if (paddlex < 3) balldir = 9;
+					else balldir = 3;
+				} else if ((ballx > paddlex) && (ballx <= paddlex + PADDLE_WIDTH)) balldir = 7;
+				break;
+			case 3:
+				if (ballx == twidth) {
+					if (paddlex + PADDLE_WIDTH > theight - 1) balldir = 7;
+					else balldir = 1;
+				} else if ((ballx + 2 > paddlex) && (ballx + 1 < paddlex + PADDLE_WIDTH)) balldir = 9;
+				break;
+			default:
+				break;
+
+		}
+	} else if ((ballx < 2) && (bally < 2)) {
 		balldir = 3;
-	} else if ((ballx < 2) && (bally > theight)) {
-		balldir = 9;
 	} else if ((ballx > twidth - 1) && (bally < 2)) {
 		balldir = 1;
-	} else if ((ballx > twidth - 1) && (bally > theight)) {
-		balldir = 7;
 	} else if ((ballx < 2) && ((balldir % 3) == 1)) {
 		balldir += 2;
 	} else if ((ballx > twidth - 1) && ((balldir % 3) == 0)) {
